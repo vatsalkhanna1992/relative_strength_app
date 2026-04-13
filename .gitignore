@@ -1,0 +1,4 @@
+__pycache__/
+nifty50_data/
+momentum_backtest_results.csv
+.claude/
