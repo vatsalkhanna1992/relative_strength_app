@@ -95,6 +95,10 @@ for ticker in nifty50_tickers:
             print(f"No data for {ticker}")
             continue
 
+        # Flatten MultiIndex columns (yfinance >= 1.0 returns MultiIndex)
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+
         df.reset_index(inplace=True)
 
         # Save individual CSV

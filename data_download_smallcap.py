@@ -197,6 +197,9 @@ for ticker in smallcap_tickers:
         if df.empty:
             print(f"No data for {ticker}")
             continue
+        # Flatten MultiIndex columns (yfinance >= 1.0 returns MultiIndex)
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
         df.reset_index(inplace=True)
         file_path = os.path.join(OUTPUT_FOLDER, f"{ticker}.csv")
         df.to_csv(file_path, index=False)

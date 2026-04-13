@@ -65,6 +65,9 @@ def _download_data_inline(all_tickers, data_folder):
             )
             if df.empty:
                 continue
+            # Flatten MultiIndex columns (yfinance >= 1.0 returns MultiIndex)
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.get_level_values(0)
             df.reset_index(inplace=True)
             df.to_csv(os.path.join(data_folder, f"{ticker}.csv"), index=False)
             df["Ticker"] = ticker
