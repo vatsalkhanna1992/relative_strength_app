@@ -95,6 +95,8 @@ def render_rs_dashboard(title, tickers, benchmark, data_folder, download_script)
         data_folder: Absolute path to CSV data folder
         download_script: Filename of the download script (e.g. "data_download.py")
     """
+    # Auto-detect currency: Indian tickers end in .NS, US tickers don't
+    currency = "₹" if benchmark.endswith(".NS") else "$"
     st.title(title)
     st.markdown("Stock prices vs. previous month end, ranked by Relative Strength (RS)")
 
@@ -168,11 +170,11 @@ def render_rs_dashboard(title, tickers, benchmark, data_folder, download_script)
         st.subheader("🏆 Benchmark Performance")
         col1, col2, col3 = st.columns(3)
         with col1:
-            st.metric(f"{benchmark} Price", f"₹{benchmark_row['Current Price']:.2f}")
+            st.metric(f"{benchmark} Price", f"{currency}{benchmark_row['Current Price']:.2f}")
         with col2:
             st.metric("Monthly Return", f"{benchmark_row['Monthly Return (%)']:.2f}%")
         with col3:
-            st.metric("Change", f"₹{benchmark_row['Change']:.2f}")
+            st.metric("Change", f"{currency}{benchmark_row['Change']:.2f}")
 
     # Top performers
     st.subheader("🚀 Top Momentum Stocks")
@@ -183,7 +185,7 @@ def render_rs_dashboard(title, tickers, benchmark, data_folder, download_script)
             with col1:
                 st.write(f"**{row['Ticker']}**")
             with col2:
-                st.metric("Price", f"₹{row['Current Price']:.2f}", f"{row['Monthly Return (%)']:.2f}%")
+                st.metric("Price", f"{currency}{row['Current Price']:.2f}", f"{row['Monthly Return (%)']:.2f}%")
             with col3:
                 st.metric("RS", f"{row['RS (%)']:.2f}%", f"Rank #{row['RS Rank']}")
             with col4:
@@ -196,11 +198,11 @@ def render_rs_dashboard(title, tickers, benchmark, data_folder, download_script)
         use_container_width=True,
         column_config={
             "RS Rank": st.column_config.NumberColumn("Rank", format="%d"),
-            "Current Price": st.column_config.NumberColumn("Current Price", format="₹%.2f"),
-            "Prev Month Price": st.column_config.NumberColumn("Prev Month Price", format="₹%.2f"),
+            "Current Price": st.column_config.NumberColumn("Current Price", format=f"{currency}%.2f"),
+            "Prev Month Price": st.column_config.NumberColumn("Prev Month Price", format=f"{currency}%.2f"),
             "Monthly Return (%)": st.column_config.NumberColumn("Monthly Return", format="%.2f%%"),
             "RS (%)": st.column_config.NumberColumn("RS vs Benchmark", format="%.2f%%"),
-            "Change": st.column_config.NumberColumn("Change", format="₹%.2f"),
+            "Change": st.column_config.NumberColumn("Change", format=f"{currency}%.2f"),
             "Volume": st.column_config.NumberColumn("Volume", format="%d"),
         }
     )

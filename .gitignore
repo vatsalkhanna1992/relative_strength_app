@@ -2,5 +2,6 @@ __pycache__/
 nifty50_data/
 midcap_data/
 smallcap_data/
+nasdaq100_data/
 momentum_backtest_results.csv
 .claude/
